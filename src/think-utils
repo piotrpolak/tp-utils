@@ -1,3 +1,8 @@
 #!/bin/sh
 
-gksu python think-utils.py
+# Check whether gksu is installed
+if which gksu >/dev/null; then
+    gksu python think-utils.py
+else
+    python think-utils.py
+fi
