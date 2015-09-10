@@ -14,11 +14,9 @@ class ThinkUtilsMainFrame(wx.Frame):
 
     def _init_coll_notebook1_Pages(self, parent):
         # generated method, don't edit
+        parent.AddPage(imageId=-1, page=self.panel1, select=True, text=u'Battery')
+        parent.AddPage(imageId=-1, page=self.panel2, select=False, text=u'HDD Active Protection System')
 
-        parent.AddPage(imageId=-1, page=self.panel1, select=True,
-              text=u'Battery')
-        parent.AddPage(imageId=-1, page=self.panel2, select=False,
-              text=u'HDD Active Protection System')
 
     def _init_ctrls(self, prnt):
         # generated method, don't edit
@@ -46,8 +44,6 @@ class ThinkUtilsMainFrame(wx.Frame):
               style=wx.TAB_TRAVERSAL)
 
 
-
-
         self.close_button = wx.Button(label=u'Close',
               name='close', parent=self, pos=wx.Point(695, 400),
               size=wx.Size(85, 28), style=0)
@@ -60,9 +56,6 @@ class ThinkUtilsMainFrame(wx.Frame):
         self.save_button.Bind(wx.EVT_BUTTON, self.on_save)
         self.save_button.SetToolTipString("Apply modified settings")
         self.save_button.Disable()
-
-
-
 
 
         y = self.vertical_pacing;
@@ -93,7 +86,6 @@ class ThinkUtilsMainFrame(wx.Frame):
 
         y = self.vertical_pacing;
 
-
         self.start_charge_thresh_slider = wx.Slider(maxValue=100,
               minValue=0, name='slider1', parent=self.panel1, pos=wx.Point(self.thrid_collumn_x,
               y), size=wx.Size(self.thrid_collumn_width, 20), style=wx.SL_AUTOTICKS | wx.SL_LABELS, value=0)
@@ -120,7 +112,6 @@ class ThinkUtilsMainFrame(wx.Frame):
               label=self.loading_text,
               parent=self.panel1, pos=wx.Point(self.second_collumn_x, y), size=wx.Size(self.second_collumn_width, 16),
               style=0)
-
 
         y += self.vertical_pacing;
         self.batery_cycles_text = wx.StaticText(
@@ -182,9 +173,6 @@ class ThinkUtilsMainFrame(wx.Frame):
               style=0)
 
 
-        #
-        #
-        #
 
         y = self.vertical_pacing;
         self.position_x_text = wx.StaticText(
@@ -251,9 +239,13 @@ class ThinkUtilsMainFrame(wx.Frame):
         self.timer.Start(100)
         self.Bind(wx.EVT_TIMER, self.on_timer, self.timer)
 
+
+
     def on_timer(self, event):
         self.read_smapi_configuration()
         self.read_hdaps_configuration()
+
+
 
     def read_hdaps_configuration(self):
         try:
@@ -274,6 +266,7 @@ class ThinkUtilsMainFrame(wx.Frame):
                 self.hdaps_state_val.SetLabel('No shock detected')
         except IOError:
             pass
+
 
 
     def read_smapi_configuration(self):
@@ -314,7 +307,6 @@ class ThinkUtilsMainFrame(wx.Frame):
         except IOError:
             pass
 
-
         try:
             f=open('/sys/devices/platform/smapi/BAT0/temperature','r')
             line=f.readline()
@@ -322,8 +314,6 @@ class ThinkUtilsMainFrame(wx.Frame):
             self.batery_temperature_val.SetLabel(str(float(line)/1000).strip()+' '+unichr(176)+'C')
         except IOError:
             pass
-
-
 
 
 
@@ -346,14 +336,16 @@ class ThinkUtilsMainFrame(wx.Frame):
 
 
 
-
     def on_close(self, event):
         self.Destroy()
+
+
 
     def on_save(self, event):
         self.save_button.Disable()
         cmd = "sudo echo "+str(int(self.start_charge_thresh_slider.GetValue()))+" > /sys/devices/platform/smapi/BAT0/start_charge_thresh; echo "+str(int(self.stop_charge_thresh_slider.GetValue()))+" > /sys/devices/platform/smapi/BAT0/stop_charge_thresh";
         os.popen4(cmd);
+
 
 
 class ThinkUtilsApp(wx.App):
